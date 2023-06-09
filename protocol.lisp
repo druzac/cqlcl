@@ -41,7 +41,8 @@
     (write-octet (as-flags (ptype value) (vsn value)) stream)
     (write-octet (as-flags (if (compression value) 1 0)
                            (if (tracing value) 1 0)) stream)
-    (write-octet (id value) stream)
+    ;; stream-id is a short in v3 and up.
+    (write-short (id value) stream)
     (write-octet (gethash (op value) +op-code-name-to-digit+) stream)
     (call-next-method value ims)
     (force-output ims)
@@ -60,7 +61,9 @@
   (let ((c (gethash (consistency header) +consistency-name-to-digit+)))
     (write-int (length (qs header)) stream)
     (write-sequence (as-bytes (qs header)) stream)
-    (write-short c stream)))
+    (write-short c stream)
+    ;; for now write 0x00 for no flags.
+    (write-octet 0 stream)))
 
 (defmethod encode-value ((header prepare-header) stream)
   (let ((c (gethash (consistency header) +consistency-name-to-digit+)))

@@ -30,7 +30,7 @@
 
 (defmethod read-single-packet ((conn connection))
   (let ((cxn (conn conn)))
-    (let* ((header-type (parse-header (parse-bytes cxn 8))))
+    (let* ((header-type (parse-header (parse-bytes cxn 9))))
       (ccase header-type
         (:supported
          (parse-supported-packet cxn))

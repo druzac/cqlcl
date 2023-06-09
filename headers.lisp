@@ -38,6 +38,10 @@
    (msg   :initarg :msg   :accessor msg)
    (extra :initarg :extra :accessor extra :initform nil)))
 
+(defmethod print-object ((err error-response) stream)
+  (print-unreadable-object (err stream :type t)
+    (format stream "code: ~a, message: ~a" (code err) (msg err))))
+
 (defun parse-schema-change (stream)
   (values t (format nil "~A: ~{~A~^.~}"
                     (parse-string stream)
@@ -75,7 +79,8 @@
     (format nil "ALREADY EXISTS: ~a.~a" keyspace table-name)))
 
 (defun parse-error-packet (stream)
-  (let* ((error-code (gethash (read-int stream) +error-codes+))
+  (let* ((raw-code (read-int stream))
+         (error-code (or (gethash raw-code +error-codes+) raw-code))
          (error-msg (parse-string stream))
          (error-val (make-instance 'error-response :code error-code :msg error-msg)))
     (setf (extra error-val)
