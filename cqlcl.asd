@@ -12,7 +12,6 @@
                (:file "protocol")
                (:file "conn"))
   :depends-on (:pooler
-               :alexandria
                :flexi-streams
                :uuid
                :split-sequence
@@ -20,15 +19,15 @@
                :lparallel
                :usocket)
   :defsystem-depends-on (:fiveam)
-  :in-order-to ((test-op (test-op :cqlcl-test))))
+  :in-order-to ((test-op (test-op :cqlcl/test))))
 
-(defsystem :cqlcl-test
+(defsystem :cqlcl/test
   :version "0.0.1"
   :description "CQLv2 binary protocol tests"
   :licence "BSD"
   :components ((:module "test"
                         :components
                         ((:file "tests"))))
-  :depends-on (:cqlcl :fiveam :alexandria :flexi-streams :uuid)
+  :depends-on (:cqlcl :fiveam :flexi-streams :uuid)
   :perform (test-op :after (o s)
                     (fiveam:run! :cqlcl)))

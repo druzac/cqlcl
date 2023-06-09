@@ -35,3 +35,9 @@
   (lambda (v)
     (mapcar (lambda (f)
               (funcall f v)) funs)))
+
+(defun alist-hash-table (alist &rest hash-table-initargs)
+  (let ((htable (apply 'make-hash-table hash-table-initargs)))
+    (dolist (cons alist)
+      (setf (gethash (car cons) htable) (cdr cons)))
+    htable))

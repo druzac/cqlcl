@@ -19,7 +19,7 @@
     (is (equal conopt expected))))
 
 (test encode-decode-string-map
-  (let* ((smap (alexandria:alist-hash-table
+  (let* ((smap (cqlcl::alist-hash-table
                 '(("KEYNAME" . "KEYVALUE")
                   ("KEYNAME2" . "KEYVALUE2")) :test #'equalp))
          (os (flexi-streams:make-in-memory-output-stream))
@@ -252,7 +252,7 @@
                      14
                      :element-type '(unsigned-byte 8)
                      :initial-contents #(48 120 65 49 66 50 67 51 68 52 69 53 70 54)))
-         (ht (alexandria:alist-hash-table
+         (ht (cqlcl::alist-hash-table
               '((1 . "SOMETHING")
                 (2 . "whatever")
                 (3 . "turds")) :test #'equalp)))

@@ -25,6 +25,13 @@
     (setf (conn-options conn) options)
     (assert (eq (startup conn) :ready))))
 
+(define-condition cql-server-error (error)
+  ((response :initarg :response :reader response)))
+
+(defmethod print-object ((err cql-server-error) stream)
+  (print-unreadable-object (err stream :type t)
+    (format stream "~a" (response err))))
+
 (defgeneric read-single-packet (connection)
   (:documentation "Reads a single CQL reply packet from a CQL connection."))
 
@@ -35,7 +42,7 @@
         (:supported
          (parse-supported-packet cxn))
         (:error
-         (parse-error-packet cxn))
+         (error 'cql-server-error :response (parse-error-packet cxn)))
         (:ready :ready)
         (:result
          (parse-result-packet cxn))))))
@@ -63,7 +70,7 @@
 
 (defmethod startup ((conn connection) &key (version "3.0.0") (compression nil))
   (declare (ignore compression)) ;; TODO: Implement compression
-  (let* ((options (alexandria:alist-hash-table
+  (let* ((options (alist-hash-table
                    `(("CQL_VERSION" . ,version))))
          (header (make-instance 'startup-header :op :startup :opts options))
          (cxn (conn conn)))

@@ -99,7 +99,7 @@
 
 (defun row-flag-set? (flags flag)
   (gethash flag
-           (alexandria:alist-hash-table
+           (alist-hash-table
             `((:global-tables-spec . ,(plusp (logand flags +global-tables-spec+)))
               (:has-more-tables    . ,(plusp (logand flags +has-more-pages+)))
               (:no-meta-data       . ,(plusp (logand flags +no-meta-data+))))

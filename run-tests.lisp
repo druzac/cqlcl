@@ -9,9 +9,6 @@
          (*trace-output* (make-broadcast-stream)))
      ,@body))
 
-#+sbcl
-(declaim (optimize sb-cover:store-coverage-data))
-
 (with-silence
     (progn
       ;; The tests generate table names, so we set the random state.
@@ -19,8 +16,3 @@
       (ql:quickload :fiveam)))
 
 (asdf:test-system :cqlcl)
-
-#+sbcl
-(progn
-  (sb-cover:report "./coverage/")
-  (declaim (optimize (sb-cover:store-coverage-data 0))))

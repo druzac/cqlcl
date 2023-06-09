@@ -298,7 +298,7 @@
            (:varint    . ,#'parse-varint)
            (:timeuuid  . ,#'parse-uuid)
            (:inet      . ,#'parse-ip))))
-    (alexandria:alist-hash-table funs)))
+    (alist-hash-table funs)))
 
 (defun parse-option (stream)
   (let* ((id (gethash (read-short stream) +option-id+)))

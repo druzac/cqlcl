@@ -2,7 +2,7 @@
 
 
 (defvar +option-id+
-  (alexandria:alist-hash-table
+  (alist-hash-table
    '((#x0000 . :custom)
      (#x0001 . :ascii)
      (#x0002 . :bigint)
@@ -34,7 +34,7 @@
 (defvar +no-meta-data+ (ldb (byte 16 0) #x0004))
 (defvar +message-types+ (list +request+ +response+))
 (defvar +result-type+
-  (alexandria:alist-hash-table
+  (alist-hash-table
    '((#x01 . :void)
      (#x02 . :rows)
      (#x03 . :set-keyspace)
@@ -42,7 +42,7 @@
      (#x05 . :schema-change))
    :test #'equal))
 (defvar +op-code-name-to-digit+
-  (alexandria:alist-hash-table
+  (alist-hash-table
    '((:error          . #x00)
      (:startup        . #x01)
      (:ready          . #x02)
@@ -63,7 +63,7 @@
 (defvar +op-code-digit-to-name+
   (rev-hash +op-code-name-to-digit+))
 (defvar +consistency-name-to-digit+
-  (alexandria:alist-hash-table
+  (alist-hash-table
    '((:any          . #x00)
      (:one          . #x01)
      (:two          . #x02)
@@ -75,7 +75,7 @@
 (defvar +consistency-digit-to-name+
   (rev-hash +consistency-name-to-digit+))
 (defvar +error-codes+
-  (alexandria:alist-hash-table
+  (alist-hash-table
    '((#x0000 . :server-error)
      (#x000A . :protocol-error)
      (#x0100 . :bad-credentials)
