@@ -33,7 +33,6 @@
    #:parse-string
    #:parse-string-map
    #:parse-uuid
-   #:read-single-packet
    #:used-streams
    #:with-next-stream-id
    #:write-int

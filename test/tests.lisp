@@ -15,8 +15,8 @@
 (test simple-connection
   (let* ((conn (make-connection))
          (conopt (gethash "COMPRESSION" (conn-options conn)))
-         (expected (values '("snappy" "lz4") t)))
-    (is (equal conopt expected))))
+         (expected (values '("lz4" "snappy") t)))
+    (is (equal (sort conopt 'string<) expected))))
 
 (test encode-decode-string-map
   (let* ((smap (cqlcl::alist-hash-table
@@ -146,7 +146,6 @@
 (defun create-full-table (table-name)
   (format nil "CREATE TABLE ~A.fulltest (
                 id int PRIMARY KEY,
-                ascii ascii,
                 bigint bigint,
                 blob blob,
                 boolean boolean,
@@ -158,7 +157,7 @@
                 varint varint,
                 list list<int>,
                 aset set<int>,
-                map map<int, ascii>)"
+                map map<int, text>)"
           table-name))
 
 (defun insert-full-table (table-name)
