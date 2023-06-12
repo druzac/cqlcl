@@ -74,10 +74,18 @@
   (let ((c (gethash (consistency header) +consistency-name-to-digit+))
         (*executing* t)
         (qid (qid header)))
+    ;; encode qid
     (encode-value qid stream)
+    ;; encode consistency
+    (write-short c stream)
+    ;; write 0x01 for query parameter flags if there are any.
+    (if (< 0 (length (vals header)))
+        (write-octet 1 stream)
+        (write-octet 0 stream))
+    ;; encode number of query parameters
     (write-short (length (vals header)) stream)
-    (encode-values (vals header) stream)
-    (write-short c stream)))
+    ;; encode query parameters
+    (encode-values (vals header) stream)))
 
 (defun write-length (thing stream)
   (let ((len (length thing)))

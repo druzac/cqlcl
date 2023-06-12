@@ -136,7 +136,7 @@
   (let* ((size (parse-short stream))
          (qid (make-array size :element-type '(unsigned-byte 8))))
     (assert (= (read-sequence qid stream) size))
-    (multiple-value-bind (col-count global-tables-spec) (parse-metadata stream)
+    (multiple-value-bind (col-count global-tables-spec) (parse-prepared-metadata stream)
       (let ((col-specs (parse-colspecs global-tables-spec col-count stream)))
         (make-instance 'prepared-query :qid qid :cs col-specs)))))
 
@@ -158,6 +158,17 @@
       (:schema-change
        (parse-schema-change stream))
       (otherwise stream))))
+
+(defun parse-prepared-metadata (stream)
+  (let* ((flags (read-int stream))
+         (col-count (read-int stream))
+         (pk-count (read-int stream))
+         (pk-indices
+           (loop for i below pk-count collect (read-short stream)))
+         (global-tables-spec (when (row-flag-set? flags :global-tables-spec)
+                               (list (parse-string stream)
+                                     (parse-string stream)))))
+    (values col-count global-tables-spec flags)))
 
 (defun parse-metadata (stream)
   (let* ((flags (read-int stream))
