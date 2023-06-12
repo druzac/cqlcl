@@ -172,7 +172,11 @@
      collect
        (parse-colspec (not global-tables-spec) stream)))
 
-(defun parse-header (header)
-  (let* ((op-code (elt header +packet-type-index+))
-         (resp-type (gethash op-code +op-code-digit-to-name+)))
-    resp-type))
+(defun parse-header (header-buff)
+  (let* ((stream (flexi-streams:make-in-memory-input-stream header-buff))
+         (version (elt (parse-bytes stream 1) 0))
+         (flags (elt (parse-bytes stream 1) 0))
+         (stream-id (parse-short stream))
+         (op-code (elt (parse-bytes stream 1) 0))
+         (len (parse-int stream)))
+    (values (gethash op-code +op-code-digit-to-name+) len)))
