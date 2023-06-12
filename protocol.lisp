@@ -68,8 +68,7 @@
 (defmethod encode-value ((header prepare-header) stream)
   (let ((c (gethash (consistency header) +consistency-name-to-digit+)))
     (write-int (length (ps header)) stream)
-    (write-sequence (as-bytes (ps header)) stream)
-    (write-short c stream)))
+    (write-sequence (as-bytes (ps header)) stream)))
 
 (defmethod encode-value ((header execute-header) stream)
   (let ((c (gethash (consistency header) +consistency-name-to-digit+))

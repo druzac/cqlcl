@@ -37,15 +37,16 @@
 
 (defmethod read-single-packet ((conn connection))
   (let ((cxn (conn conn)))
-    (let* ((header-type (parse-header (parse-bytes cxn 9))))
-      (ccase header-type
-        (:supported
-         (parse-supported-packet cxn))
-        (:error
-         (error 'cql-server-error :response (parse-error-packet cxn)))
-        (:ready :ready)
-        (:result
-         (parse-result-packet cxn))))))
+    (multiple-value-bind (header-type len) (parse-header (parse-bytes cxn 9))
+      (let ((inp-stream (flexi-streams:make-in-memory-input-stream (parse-bytes cxn len))))
+        (ccase header-type
+          (:supported
+           (parse-supported-packet inp-stream))
+          (:error
+           (error 'cql-server-error :response (parse-error-packet inp-stream)))
+          (:ready :ready)
+          (:result
+           (parse-result-packet inp-stream)))))))
 
 (defgeneric options (connection)
   (:documentation "Sends an option request."))
